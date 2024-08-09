@@ -15,6 +15,11 @@ cmd:sub("add_score :username :int", function(name, username, int)
 end)
 
 cmd:sub("get :username", function(name, username)
-    local rank = jrankings.file:get_rank(username)
-    return true, "RANK: " .. rank
+    local rank_num = jrankings.file:get_rank(username)
+    local ranking = jrankings.file:get(username)
+
+    minetest.chat_send_player(name, string.format("RANK: %d", rank_num))
+    for k, v in pairs(ranking) do
+        minetest.chat_send_player(name, string.format("%s: %s", k, tostring(v)))
+    end
 end)

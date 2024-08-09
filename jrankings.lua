@@ -22,11 +22,16 @@ function Builder:new()
 end
 
 function Builder:get(pname)
-    return self.rankings[pname]
+    local ranking = self.rankings[pname] or {}
+    if ranking.name then
+        self.rankings[pname].name = nil
+    end
+
+    return ranking
 end
 
 function Builder:set(pname, newrankings, erase_unset)
-    local rankings = self:get(pname) or {}
+    local rankings = self:get(pname)
     if erase_unset then
         rankings = {}
     end
@@ -38,7 +43,7 @@ function Builder:set(pname, newrankings, erase_unset)
 end
 
 function Builder:add(pname, amounts)
-    local newrankings = self:get(pname) or {}
+    local newrankings = self:get(pname)
 
     for k, v in pairs(amounts) do
         newrankings[k] = (newrankings[k] or 0) + v
@@ -58,12 +63,11 @@ function Builder:load()
     end
 
     for line in file:lines() do
-        local t = minetest.parse_json(line)
-        local pname = t.name
-        t.name = nil
+        local ranking = minetest.parse_json(line)
+        local pname = ranking.name
 
-        self.rankings[pname] = t
         table.insert(self.top, pname)
+        self:set(pname, ranking)
     end
     file:close()
     self:sort_rankings()
@@ -84,9 +88,9 @@ end
 
 function Builder:sort_rankings()
     table.sort(self.top, function (a, b)
-        local p1 = self:get(a) or {score = 0}
-        local p2 = self:get(b) or {score = 0}
-        return p1.score > p2.score
+        local p1 = self:get(a).score or 0
+        local p2 = self:get(b).score or 0
+        return p1 > p2
     end)
 end
 
