@@ -5,11 +5,10 @@ jrankings = dofile(modpath .. "/jrankings.lua")
 jrankings.file = jrankings.new(minetest.get_worldpath() .. "/jrankings.txt")
 jrankings.file:load()
 
-if minetest.get_modpath("lib_chatcmdbuilder") then
-    dofile(modpath .. "/commands.lua")
-end
-
-dofile(modpath .. "/player.lua")
+--[[ Files used for debugging.
+dofile(modpath .. "/tests/tests.lua")
+dofile(modpath .. "/tests/player.lua")
+]]
 
 minetest.after(0, function()
     local function save_interval()

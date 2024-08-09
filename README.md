@@ -43,8 +43,15 @@ local jrankings = dofile(minetest.get_modpath(minetest.get_current_modname()) ..
   - Higher score = higher ranking.
 - `get_top(count)` - Gets the top players.
   - `count` is an integer.
-  - Returns a table with all the top player names.
+  - Returns a table with all the top player names from `1 ... count`.
 - `get_rank(pname)` - Gets the rank of a specific player.
-  - Returns a number.
+  - Returns an integer.
+- `get_ranks_in_range(min, max)` - Gets the specific player ranks in range `min ... max`.
+  - `min, max` are both integers.
+  - Returns a table with all the players.
+- `get_largest_rank()` - Gets the biggest rank registered.
+  - Returns an integer.
 - `load()` - Loads the rankings from filepath.
+  - Returns `boolean`.
 - `save()`-  Save the rankings to filepath.
+  - Returns `boolean`.

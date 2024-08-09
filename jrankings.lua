@@ -59,7 +59,7 @@ end
 function Builder:load()
     local file = io.open(self.filepath, "r")
     if not file then
-        return
+        return false
     end
 
     for line in file:lines() do
@@ -71,12 +71,15 @@ function Builder:load()
     end
     file:close()
     self:sort_rankings()
+
+    minetest.log("action", "[JRankings] Loaded rankings from: " .. self.filepath)
+    return true
 end
 
 function Builder:save()
     local file = io.open(self.filepath, "w")
     if not file then
-        return
+        return false
     end
 
     for pname, ranking in pairs(self.rankings) do
@@ -84,6 +87,9 @@ function Builder:save()
         file:write(minetest.write_json(ranking) .. "\n")
     end
     file:close()
+
+    minetest.log("action", "[JRankings] Saved rankings to: " .. self.filepath)
+    return true
 end
 
 function Builder:sort_rankings()
@@ -94,18 +100,10 @@ function Builder:sort_rankings()
     end)
 end
 
-local function TableLength(tbl)
-    local count = 0
-    for k, v in pairs(tbl) do
-        count = count + 1
-    end
-    return count
-end
-
 function Builder:get_top(count)
     self:sort_rankings()
-    if count > TableLength(self.top) then
-        return
+    if count > #self.top then
+        return self:get_top(#self.top)
     end
 
     local index = 0
@@ -113,6 +111,10 @@ function Builder:get_top(count)
     for _, name in ipairs(self.top) do
         index = index + 1
         table.insert(top, name)
+
+        if index >= count then
+            break
+        end
     end
     return top
 end
@@ -124,6 +126,22 @@ function Builder:get_rank(pname)
             return i
         end
     end
+end
+
+function Builder:get_ranks_in_range(min, max)
+    if max > #self.top then
+        max = #self.top
+    end
+
+    local top = {}
+    for i = min, max do
+        table.insert(top, self.top[i])
+    end
+    return top
+end
+
+function Builder:get_largest_rank()
+    return #self.top
 end
 
 return jrankings
