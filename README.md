@@ -31,6 +31,10 @@ local jrankings = dofile(minetest.get_modpath(minetest.get_current_modname()) ..
 
 `pname` is a string and is a name of a valid player.
 
+- `load()` - Loads the rankings from filepath.
+  - Returns `boolean`.
+- `save()`-  Save the rankings to filepath.
+  - Returns `boolean`.
 - `get(pname)` - Gets all of the values registered under player.
   - Returns a key-value table.
 - `set(pname, newrankings, erase_unset)` - Sets a player's ranking.
@@ -51,7 +55,4 @@ local jrankings = dofile(minetest.get_modpath(minetest.get_current_modname()) ..
   - Returns a table with all the players.
 - `get_largest_rank()` - Gets the biggest rank registered.
   - Returns an integer.
-- `load()` - Loads the rankings from filepath.
-  - Returns `boolean`.
-- `save()`-  Save the rankings to filepath.
-  - Returns `boolean`.
+- `ranking_reset()` - Sets all of the rankings to `{}`.

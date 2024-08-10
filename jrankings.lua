@@ -53,7 +53,14 @@ function Builder:add(pname, amounts)
 end
 
 function Builder:del(pname)
-    self.rankings[pname] = nil
+    self.rankings[pname] = {}
+
+    for i, name in ipairs(self.top) do
+        if name == pname then
+            table.remove(self.top, i)
+            return
+        end
+    end
 end
 
 function Builder:load()
@@ -98,6 +105,8 @@ function Builder:sort_rankings()
         local p2 = self:get(b).score or 0
         return p1 > p2
     end)
+
+    return self.top
 end
 
 function Builder:get_top(count)
@@ -142,6 +151,13 @@ end
 
 function Builder:get_largest_rank()
     return #self.top
+end
+
+function Builder:ranking_reset()
+    for pname, _ in pairs(self.rankings) do
+        self:del(pname)
+    end
+    self.top = {}
 end
 
 return jrankings
