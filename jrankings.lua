@@ -22,12 +22,7 @@ function Builder:new()
 end
 
 function Builder:get(pname)
-    local ranking = self.rankings[pname] or {}
-    if ranking.name then
-        self.rankings[pname].name = nil
-    end
-
-    return ranking
+    return self.rankings[pname] or {}
 end
 
 function Builder:set(pname, newrankings, erase_unset)
@@ -71,10 +66,11 @@ function Builder:load()
 
     for line in file:lines() do
         local ranking = minetest.parse_json(line)
-        local pname = ranking.name
+        local newranking = table.copy(ranking)
+        newranking.name = nil
 
-        table.insert(self.top, pname)
-        self:set(pname, ranking)
+        table.insert(self.top, ranking.name)
+        self:set(ranking.name, newranking)
     end
     file:close()
     self:sort_rankings()
@@ -90,8 +86,9 @@ function Builder:save()
     end
 
     for pname, ranking in pairs(self.rankings) do
-        ranking.name = pname
-        file:write(minetest.write_json(ranking) .. "\n")
+        local newranking = table.copy(ranking)
+        newranking.name = pname
+        file:write(minetest.write_json(newranking) .. "\n")
     end
     file:close()
 
@@ -115,13 +112,10 @@ function Builder:get_top(count)
         return self:get_top(#self.top)
     end
 
-    local index = 0
     local top = {}
-    for _, name in ipairs(self.top) do
-        index = index + 1
+    for i, name in ipairs(self.top) do
         table.insert(top, name)
-
-        if index >= count then
+        if i >= count then
             break
         end
     end
@@ -138,6 +132,9 @@ function Builder:get_rank(pname)
 end
 
 function Builder:get_ranks_in_range(min, max)
+    if min > max or min > #self.top then
+        min = 1
+    end
     if max > #self.top then
         max = #self.top
     end

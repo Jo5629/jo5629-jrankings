@@ -5,10 +5,7 @@ jrankings = dofile(modpath .. "/jrankings.lua")
 jrankings.file = jrankings.new(minetest.get_worldpath() .. "/jrankings.txt")
 jrankings.file:load()
 
---[[ Files used for debugging.
 dofile(modpath .. "/tests/tests.lua")
-dofile(modpath .. "/tests/player.lua")
-]]
 
 minetest.after(0, function()
     local function save_interval()

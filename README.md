@@ -10,7 +10,7 @@ Created by Jo5629. License: MIT
 
 1. Depend on `jrankings`.
 2. Include the `jrankings.lua` file in your mod and store in a **LOCAL** variable:
-   - Store as a local to stop confliction with the actual mod.
+   - This is to stop confliction with the actual mod.
 
 ``` lua
 local jrankings = dofile(minetest.get_modpath(minetest.get_current_modname()) .. "/jrankings.lua")
@@ -28,8 +28,6 @@ local jrankings = dofile(minetest.get_modpath(minetest.get_current_modname()) ..
 - `jranking.Builder:new()` - Returns a new instance, but there is no filepath.
 
 **Methods:**
-
-`pname` is a string and is a name of a valid player.
 
 - `load()` - Loads the rankings from filepath.
   - Returns `boolean`.
@@ -53,6 +51,6 @@ local jrankings = dofile(minetest.get_modpath(minetest.get_current_modname()) ..
 - `get_ranks_in_range(min, max)` - Gets the specific player ranks in range `min ... max`.
   - `min, max` are both integers.
   - Returns a table with all the players.
-- `get_largest_rank()` - Gets the biggest rank registered.
+- `get_largest_rank()` - Gets the largest rank registered.
   - Returns an integer.
-- `ranking_reset()` - Sets all of the rankings to `{}`.
+- `ranking_reset()` - Resets all of the rankings.
